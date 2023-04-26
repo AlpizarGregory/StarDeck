@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using StarDeck.Data;
 using StarDeck.Models;
@@ -7,6 +7,7 @@ using System.Text.RegularExpressions;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Util;
 
 namespace StarDeck.Controllers
 {
@@ -227,5 +228,36 @@ namespace StarDeck.Controllers
 
             return emailRegex.IsMatch(emailInput);
         }
+
+
+        /// <summary>
+        /// Method <c>Register</c> Registers a new player
+        /// </summary>
+        /// <returns>Register view</returns>
+        [HttpPost("register")]
+        public ActionResult Register([FromForm] Player player)
+        {
+            bool emailIsValid = EmailFormatValidation(player.email);
+            if (emailIsValid)
+            {
+                Player tempPlayer = _db.Players.Where(row => row.email == player.email).AsNoTracking().FirstOrDefault();
+                if (tempPlayer == null)
+                {
+                    player.enable = true;
+                    player.failedattempts = 0;
+                    tempPlayer.password = Encription.encriptPassword(player.password);
+                    _db.Players.Add(player);
+                    _db.SaveChanges();
+                    ViewData["errorMessage"] = "El usuario ha sido registrado exitosamente";
+                    return View("Login");
+                }
+                ViewData["errorMessage"] = "El correo electronico ingresado ya se encuentra registrado";
+                return View("Register");
+            }
+            ViewData["errorMessage"] = "El formato del correo electronico ingresado no es correcto";
+            return View("Register");
+        }
     }
+
+
 }
