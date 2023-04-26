@@ -1,12 +1,12 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Npgsql;
-using NpgsqlTypes;
 using StarDeck.Data;
 using StarDeck.Models;
 using System.Data;
-using System.Numerics;
 using System.Text.RegularExpressions;
+using System.Security.Claims;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
 
 namespace StarDeck.Controllers
 {
@@ -41,7 +41,35 @@ namespace StarDeck.Controllers
         [HttpGet("login")]
         public ActionResult Login()
         {
+            ClaimsPrincipal claimUser = HttpContext.User;
+
+            if (claimUser.Identity.IsAuthenticated)
+            {
+                ViewData["Action"] = "Logout";
+                ViewData["Controller"] = "Player";
+                ViewData["LogText"] = "Logout";
+                HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+                return View();
+            }
+            ViewData["Action"] = "Login";
+            ViewData["Controller"] = "Player";
+            ViewData["LogText"] = "Login";
             return View();
+        }
+
+        [HttpGet("logout")]
+        public ActionResult Logout()
+        {
+            ClaimsPrincipal claimUser = HttpContext.User;
+
+            if (claimUser.Identity.IsAuthenticated)
+            {
+                HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+            }
+            ViewData["Action"] = "Login";
+            ViewData["Controller"] = "Player";
+            ViewData["LogText"] = "Login";
+            return RedirectToAction("Login", "Player");
         }
 
         /// <summary>
@@ -52,9 +80,23 @@ namespace StarDeck.Controllers
         [HttpGet("main-menu/{username}")]
         public ActionResult MainMenu(string username) 
         {
-            ViewData["email"] = username;
-            Console.WriteLine(ViewData["email"]);
-            return View(); 
+            ClaimsPrincipal claimUser = HttpContext.User;
+
+            if (claimUser.Identity.IsAuthenticated)
+            {
+                ViewData["username"] = username;
+                ViewData["Action"] = "Logout";
+                ViewData["Controller"] = "Player";
+                ViewData["LogText"] = "Logout";
+                return View();
+            }
+            else
+            {
+                ViewData["Action"] = "Login";
+                ViewData["Controller"] = "Player";
+                ViewData["LogText"] = "Login";
+                return RedirectToAction("Login", "Player");
+            }
         }
 
         /// <summary>
@@ -80,8 +122,26 @@ namespace StarDeck.Controllers
                         if (player.password == tempPlayer.password)
                         {
                             player.username = tempPlayer.username;
-                            Console.WriteLine(player.username);
-                            Console.WriteLine(tempPlayer.username);
+                            List<Claim> claims = new List<Claim>()
+                            {
+                                new Claim(ClaimTypes.NameIdentifier, player.email),
+                                new Claim("Other properties", "Player role")
+                            };
+
+                            ClaimsIdentity claimsIdentity = new ClaimsIdentity(claims,
+                                CookieAuthenticationDefaults.AuthenticationScheme);
+
+                            AuthenticationProperties properties = new AuthenticationProperties()
+                            {
+                                AllowRefresh = true,
+                                IsPersistent = true
+                            };
+
+                            HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme,
+                                new ClaimsPrincipal(claimsIdentity), properties); 
+                            ViewData["Action"] = "Logout";
+                            ViewData["Controller"] = "Player";
+                            ViewData["LogText"] = "Logout";
                             Response.Redirect("/player/main-menu/" + tempPlayer.username);
                         }
                         else
@@ -98,6 +158,9 @@ namespace StarDeck.Controllers
                                 player.disabledate = actualTime.ToString("dd/MM/yyyy HH:mm:ss");
                                 _db.Players.Update(player);
                                 _db.SaveChanges();
+                                ViewData["Action"] = "Login";
+                                ViewData["Controller"] = "Player";
+                                ViewData["LogText"] = "Login";
                                 ViewData["errorMessage"] = "Este usuario ha sido deshabilitado. Vuelva a intentar en 15 segundos" +
                                     " o contacte al equipo de soporte";
                                 return View("Login");
@@ -116,10 +179,16 @@ namespace StarDeck.Controllers
                             player.failedattempts = 0;
                             _db.Update(player);
                             _db.SaveChanges();
+                            ViewData["Action"] = "Login";
+                            ViewData["Controller"] = "Player";
+                            ViewData["LogText"] = "Login";
                             return View("Login");
                         }
                         ViewData["errorMessage"] = "Este usuario ha sido deshabilitado. Vuelva a intentar en 15 segundos" +
                             " o contacte al equipo de soporte";
+                        ViewData["Action"] = "Login";
+                        ViewData["Controller"] = "Player";
+                        ViewData["LogText"] = "Login";
                         return View("Login");
                     }
 
@@ -127,14 +196,23 @@ namespace StarDeck.Controllers
                 else
                 {
                     ViewData["errorMessage"] = "La información ingresada no es correcta";
+                    ViewData["Action"] = "Login";
+                    ViewData["Controller"] = "Player";
+                    ViewData["LogText"] = "Login";
                     return View("Login");
                 }
             } 
             else
             {
                 ViewData["errorMessage"] = "El formato del correo electronico ingresado no es correcto";
+                ViewData["Action"] = "Login";
+                ViewData["Controller"] = "Player";
+                ViewData["LogText"] = "Login";
                 return View("Login");
             }
+            ViewData["Action"] = "Login";
+            ViewData["Controller"] = "Player";
+            ViewData["LogText"] = "Login";
             return View("Login");
         }
 

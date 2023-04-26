@@ -26,7 +26,7 @@
                             <a class="nav-link text-white" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-white" asp-area="" asp-controller="Player" asp-action="Login">Login</a>
+                            <a class="nav-link text-white" asp-area="" asp-controller=@ViewData["Controller"] asp-action=@ViewData["Action"]>@ViewData["LogText"]</a>
                         </li>
                     </ul>
                 </div>
