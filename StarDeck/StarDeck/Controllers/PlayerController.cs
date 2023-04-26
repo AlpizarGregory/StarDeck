@@ -14,7 +14,7 @@ namespace StarDeck.Controllers
     /// Class <c>PlayerController</c> manipulates the information of players
     /// </summary>
     [ApiController]
-    [Route("player")]
+    [Route("")]
     public class PlayerController : Controller
     {
         private readonly PostgresDbContext _db;
@@ -28,7 +28,7 @@ namespace StarDeck.Controllers
         /// Method <c>Index</c> shows the details of the player model.
         /// </summary>
         /// <returns>The Index view</returns>
-        [HttpGet]
+        [HttpGet("index")]
         public IActionResult Index()
         {
             return View();
@@ -38,7 +38,7 @@ namespace StarDeck.Controllers
         /// Method <c>Login</c> Shows a form for the user to login the game
         /// </summary>
         /// <returns>Login view</returns>
-        [HttpGet("login")]
+        [HttpGet]
         public ActionResult Login()
         {
             ClaimsPrincipal claimUser = HttpContext.User;
@@ -142,7 +142,7 @@ namespace StarDeck.Controllers
                             ViewData["Action"] = "Logout";
                             ViewData["Controller"] = "Player";
                             ViewData["LogText"] = "Logout";
-                            Response.Redirect("/player/main-menu/" + tempPlayer.username);
+                            Response.Redirect("/main-menu/" + tempPlayer.username);
                         }
                         else
                         {
