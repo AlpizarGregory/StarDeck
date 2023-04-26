@@ -8,7 +8,17 @@ namespace StarDeck.Models
     public class Player
     {
         [Key]
-        public string Email { get; set; }
-        public string Password { get; set; }
+        public string email { get; set; }
+        public string password { get; set; }
+        public bool enable { get; set; }
+        public string username { get; set; }
+        public int failedAttempts { get; set; }
+        public DateOnly disableDate { get; set; }
+        public TimeOnly disableTime { get; set; }
+
+        public Player()
+        {
+            username = "username";
+        }
     }
 }

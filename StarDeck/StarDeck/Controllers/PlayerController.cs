@@ -3,6 +3,7 @@ using Npgsql;
 using StarDeck.Models;
 using System.Text.RegularExpressions;
 
+
 namespace StarDeck.Controllers
 {
     [ApiController]
@@ -13,6 +14,7 @@ namespace StarDeck.Controllers
         private NpgsqlCommand command = new NpgsqlCommand();
         private NpgsqlDataReader dataReader;
         private int failedAttemps = 0;
+        
 
         [HttpGet]
         public IActionResult Index()
@@ -26,42 +28,61 @@ namespace StarDeck.Controllers
             return View();
         }
 
+        [HttpGet("main-menu/{username}")]
+        public ActionResult MainMenu(string username) 
+        {
+            ViewData["email"] = username;
+            Console.WriteLine(ViewData["email"]);
+            return View(); 
+        }
+
         [HttpPost("verification")]
         public ActionResult Verify([FromForm] Player player)
         {
-            bool emailIsValid = EmailFormatValidation(player.Email);
+            bool emailIsValid = EmailFormatValidation(player.email);
             if (emailIsValid)
             {
                 connectionString();
                 connection.Open();
                 command.Connection = connection;
-                command.CommandText = "SELECT email, password FROM public.player WHERE email='" + player.Email + "'";
+                command.CommandText = "SELECT email, password, username, enable, failed_attempts, disable_date, disable_time" +
+                    " FROM public.player WHERE email='" + player.email + "'";
                 dataReader = command.ExecuteReader();
 
                 if (dataReader.Read())
                 {
-                    string dbPassword = dataReader.GetString(1);
+                    bool dbEnable = dataReader.GetBoolean(3);
 
-                    if (player.Password == dbPassword)
+                    if (dbEnable)
                     {
-                        return View("Verify");
-                    } else
-                    {
-                        failedAttemps++;
-                        if (failedAttemps > 2) 
+                        player.enable = dbEnable;
+                        string dbPassword = dataReader.GetString(1);
+
+                        if (player.password == dbPassword)
                         {
-                            Console.WriteLine("Usuario Deshabilitado");
-                            // Deshabilitar por 15 segundos y "Este usuario ha sido deshabilitado. Vuelva
-                            // a intentar en 15 segundos o contacte al equipo de soporte."
+                            player.username = dataReader.GetString(2);
+                            Response.Redirect("/player/main-menu/" + player.username);
                         }
+                        else
+                        {
+                            failedAttemps++;
+                            if (failedAttemps > 2)
+                            {
+                                Console.WriteLine("Usuario Deshabilitado");
+                                // Deshabilitar por 15 segundos y "Este usuario ha sido deshabilitado. Vuelva
+                                // a intentar en 15 segundos o contacte al equipo de soporte."
+                            }
 
+                        }
                     }
 
-                } else
+                } 
+                else
                 {
                     Console.WriteLine("Invalid user");
                 }
-            } else
+            } 
+            else
             {
                 return View("Error"); // El formato del correo electronico ingresado no es correcto
             }
