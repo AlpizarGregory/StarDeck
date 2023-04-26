@@ -24,7 +24,7 @@ namespace StarDeck.Controllers
         {
             _db = db;
         }
-        
+
         /// <summary>
         /// Method <c>Index</c> shows the details of the player model.
         /// </summary>
@@ -79,7 +79,7 @@ namespace StarDeck.Controllers
         /// <param name="username">the username to be shown on screen</param>
         /// <returns>MainMenu view</returns>
         [HttpGet("main-menu/{username}")]
-        public ActionResult MainMenu(string username) 
+        public ActionResult MainMenu(string username)
         {
             ClaimsPrincipal claimUser = HttpContext.User;
 
@@ -111,7 +111,7 @@ namespace StarDeck.Controllers
             bool emailIsValid = EmailFormatValidation(player.email);
             if (emailIsValid)
             {
-               Player tempPlayer = _db.Players.Where(row => row.email == player.email).AsNoTracking().FirstOrDefault();
+                Player tempPlayer = _db.Players.Where(row => row.email == player.email).AsNoTracking().FirstOrDefault();
 
                 if (tempPlayer != null)
                 {
@@ -139,7 +139,7 @@ namespace StarDeck.Controllers
                             };
 
                             HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme,
-                                new ClaimsPrincipal(claimsIdentity), properties); 
+                                new ClaimsPrincipal(claimsIdentity), properties);
                             ViewData["Action"] = "Logout";
                             ViewData["Controller"] = "Player";
                             ViewData["LogText"] = "Logout";
@@ -170,7 +170,7 @@ namespace StarDeck.Controllers
                             return View("Login");
 
                         }
-                    } 
+                    }
                     else
                     {
                         int seconds = (int)(DateTime.Now - DateTime.Parse(tempPlayer.disabledate)).TotalSeconds;
@@ -193,7 +193,7 @@ namespace StarDeck.Controllers
                         return View("Login");
                     }
 
-                } 
+                }
                 else
                 {
                     ViewData["errorMessage"] = "La información ingresada no es correcta";
@@ -202,7 +202,7 @@ namespace StarDeck.Controllers
                     ViewData["LogText"] = "Login";
                     return View("Login");
                 }
-            } 
+            }
             else
             {
                 ViewData["errorMessage"] = "El formato del correo electronico ingresado no es correcto";
@@ -249,12 +249,24 @@ namespace StarDeck.Controllers
                     _db.Players.Add(player);
                     _db.SaveChanges();
                     ViewData["errorMessage"] = "El usuario ha sido registrado exitosamente";
+
+                    ViewData["Action"] = "Login";
+                    ViewData["Controller"] = "Player";
+                    ViewData["LogText"] = "Login";
                     return View("Login");
                 }
                 ViewData["errorMessage"] = "El correo electronico ingresado ya se encuentra registrado";
+
+                ViewData["Action"] = "Login";
+                ViewData["Controller"] = "Player";
+                ViewData["LogText"] = "Login";
                 return View("Register");
             }
             ViewData["errorMessage"] = "El formato del correo electronico ingresado no es correcto";
+
+            ViewData["Action"] = "Login";
+            ViewData["Controller"] = "Player";
+            ViewData["LogText"] = "Login";
             return View("Register");
         }
     }
