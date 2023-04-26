@@ -3,7 +3,9 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 
 namespace StarDeck.Models
-{
+{   /// <summary>
+    /// Class <c>Player</c> models the information of a StarDeck player
+    /// </summary>
     [Table("player")]
     public class Player
     {

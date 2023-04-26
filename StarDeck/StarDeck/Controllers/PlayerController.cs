@@ -10,6 +10,9 @@ using System.Text.RegularExpressions;
 
 namespace StarDeck.Controllers
 {
+    /// <summary>
+    /// Class <c>PlayerController</c> manipulates the information of players
+    /// </summary>
     [ApiController]
     [Route("player")]
     public class PlayerController : Controller
@@ -21,19 +24,31 @@ namespace StarDeck.Controllers
             _db = db;
         }
         
-
+        /// <summary>
+        /// Method <c>Index</c> shows the details of the player model.
+        /// </summary>
+        /// <returns>The Index view</returns>
         [HttpGet]
         public IActionResult Index()
         {
             return View();
         }
 
+        /// <summary>
+        /// Method <c>Login</c> Shows a form for the user to login the game
+        /// </summary>
+        /// <returns>Login view</returns>
         [HttpGet("login")]
         public ActionResult Login()
         {
             return View();
         }
 
+        /// <summary>
+        /// Method <c>MainMenu</c> shows the player's username
+        /// </summary>
+        /// <param name="username">the username to be shown on screen</param>
+        /// <returns>MainMenu view</returns>
         [HttpGet("main-menu/{username}")]
         public ActionResult MainMenu(string username) 
         {
@@ -42,6 +57,11 @@ namespace StarDeck.Controllers
             return View(); 
         }
 
+        /// <summary>
+        /// Method <c>Verify</c> Validates the given info and authenticates the credential for login
+        /// </summary>
+        /// <param name="player">A Player instance with the email and the password entered</param>
+        /// <returns>The Main Menu view or login with error messages</returns>
         [HttpPost("verification")]
         public ActionResult Verify([FromForm] Player player)
         {
@@ -118,16 +138,16 @@ namespace StarDeck.Controllers
             return View("Login");
         }
 
+        /// <summary>
+        /// Method <c>EmailFormatValidation</c> verifies if the email has the right format.
+        /// </summary>
+        /// <param name="emailInput">The email entered</param>
+        /// <returns>True or false</returns>
         internal bool EmailFormatValidation(string emailInput)
         {
             Regex emailRegex = new Regex(@"^([\w\.\-]+)@([\w\-]+)((\.(\w){2,3})+)$", RegexOptions.IgnoreCase);
 
             return emailRegex.IsMatch(emailInput);
-        }
-
-        internal string connectionString()
-        {
-            return "Server=localhost;Port=5432;User Id=postgres;Password=password;Database=stardeck;";
         }
     }
 }
