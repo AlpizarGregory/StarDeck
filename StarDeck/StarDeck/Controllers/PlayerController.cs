@@ -245,6 +245,7 @@ namespace StarDeck.Controllers
             ViewData["Action"] = "Login";
             ViewData["Controller"] = "Player";
             ViewData["LogText"] = "Login";
+            Response.Redirect("/register");
             return View("Register");
         }
 

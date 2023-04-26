@@ -21,7 +21,7 @@ export function Signup() {
 
         e.preventDefault();
         try {
-            await axios.post("http://localhost:4000/signup", { //PLACEHOLDER PARA URL DEL API
+            await axios.post("http://localhost:7012/register", { //PLACEHOLDER PARA URL DEL API
                 name,
                 nickname,
                 nacionality,
