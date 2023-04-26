@@ -12,13 +12,13 @@ namespace StarDeck.Models
         public string password { get; set; }
         public bool enable { get; set; }
         public string username { get; set; }
-        public int failedAttempts { get; set; }
-        public DateOnly disableDate { get; set; }
-        public TimeOnly disableTime { get; set; }
+        public int failedattempts { get; set; }
+        public string disabledate { get; set; }
 
         public Player()
         {
             username = "username";
+            disabledate = "01/01/1990 01:01:01";
         }
     }
 }
