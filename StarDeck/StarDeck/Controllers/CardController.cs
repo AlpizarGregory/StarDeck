@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Models;
-using Data;
+using StarDeck.Data;
 
 namespace StarDeck.Controllers;
 
@@ -11,9 +11,9 @@ public class CardController : ControllerBase
 {
     private readonly ILogger<CardController> _logger;
     private readonly IConfiguration _configuration;
-    private readonly PostgresDBContext _db;
+    private readonly PostgresDbContext _db;
 
-    public CardController(ILogger<CardController> logger, IConfiguration configuration, PostgresDBContext db)
+    public CardController(ILogger<CardController> logger, IConfiguration configuration, PostgresDbContext db)
     {
         _logger = logger;
         _configuration = configuration;

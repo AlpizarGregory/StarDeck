@@ -116,7 +116,7 @@ namespace StarDeck.Controllers
                 if (tempPlayer != null)
                 {
                     player.username = tempPlayer.username;
-                    if (tempPlayer.enable)
+                    if (tempPlayer.enable == "activo")
                     {
                         player.enable = tempPlayer.enable;
 
@@ -154,7 +154,7 @@ namespace StarDeck.Controllers
 
                             if (player.failedattempts == 3)
                             {
-                                player.enable = false;
+                                player.enable = "inactivo";
                                 DateTime actualTime = DateTime.Now;
                                 player.disabledate = actualTime.ToString("dd/MM/yyyy HH:mm:ss");
                                 _db.Players.Update(player);
@@ -176,7 +176,7 @@ namespace StarDeck.Controllers
                         int seconds = (int)(DateTime.Now - DateTime.Parse(tempPlayer.disabledate)).TotalSeconds;
                         if (seconds > 15)
                         {
-                            player.enable = true;
+                            player.enable = "activo";
                             player.failedattempts = 0;
                             _db.Update(player);
                             _db.SaveChanges();
@@ -229,13 +229,32 @@ namespace StarDeck.Controllers
             return emailRegex.IsMatch(emailInput);
         }
 
+        [HttpGet("register")]
+        public ActionResult Register()
+        {
+            ClaimsPrincipal claimUser = HttpContext.User;
+
+            if (claimUser.Identity.IsAuthenticated)
+            {
+                ViewData["Action"] = "Logout";
+                ViewData["Controller"] = "Player";
+                ViewData["LogText"] = "Logout";
+                HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+                return View("Index");
+            }
+            ViewData["Action"] = "Login";
+            ViewData["Controller"] = "Player";
+            ViewData["LogText"] = "Login";
+            return View("Register");
+        }
+
 
         /// <summary>
         /// Method <c>Register</c> Registers a new player
         /// </summary>
         /// <returns>Register view</returns>
-        [HttpPost("register")]
-        public ActionResult Register([FromForm] Player player)
+        [HttpPost("verify-register")]
+        public ActionResult VerifyRegister([FromForm] Player player)
         {
             bool emailIsValid = EmailFormatValidation(player.email);
             if (emailIsValid)
@@ -243,7 +262,7 @@ namespace StarDeck.Controllers
                 Player tempPlayer = _db.Players.Where(row => row.email == player.email).AsNoTracking().FirstOrDefault();
                 if (tempPlayer == null)
                 {
-                    player.enable = true;
+                    player.enable = "activo";
                     player.failedattempts = 0;
                     tempPlayer.password = Encription.encriptPassword(player.password);
                     _db.Players.Add(player);
@@ -260,14 +279,14 @@ namespace StarDeck.Controllers
                 ViewData["Action"] = "Login";
                 ViewData["Controller"] = "Player";
                 ViewData["LogText"] = "Login";
-                return View("Register");
+                return View();
             }
             ViewData["errorMessage"] = "El formato del correo electronico ingresado no es correcto";
 
             ViewData["Action"] = "Login";
             ViewData["Controller"] = "Player";
             ViewData["LogText"] = "Login";
-            return View("Register");
+            return View();
         }
     }
 

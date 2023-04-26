@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Models;
-using Data;
+using StarDeck.Data;
 using Util;
 
 namespace StarDeck.Controllers;
@@ -10,13 +10,13 @@ namespace StarDeck.Controllers;
 public class AdminController : ControllerBase
 {
 
-    private readonly ILogger<AuthenticationController> _logger;
+    private readonly ILogger<AdminController> _logger;
 
     private readonly IConfiguration _configuration;
 
-    private readonly PostgresDBContext _db;
+    private readonly PostgresDbContext _db;
 
-    public AuthenticationController(ILogger<AuthenticationController> logger, IConfiguration configuration, PostgresDBContext db)
+    public AdminController(ILogger<AdminController> logger, IConfiguration configuration, PostgresDbContext db)
     {
         _logger = logger;
         _configuration = configuration;
