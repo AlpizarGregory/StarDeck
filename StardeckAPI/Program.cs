@@ -1,6 +1,3 @@
-using Data;
-using Microsoft.EntityFrameworkCore;
-
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -9,18 +6,6 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-//add db context
-builder.Services.AddDbContext<PostgresDBContext>(options => options.UseNpgsql(builder.Configuration.GetConnectionString("PostgresConnection")));
-
-//Add cors
-builder.Services.AddCors(options =>
-{
-    options.AddPolicy("CorsPolicy", builder =>
-    {
-        builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader();
-    });
-});
-
 
 var app = builder.Build();
 
