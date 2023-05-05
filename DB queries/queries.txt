@@ -1,0 +1,51 @@
+-- Stored Function
+
+CREATE OR REPLACE FUNCTION public.crear_llave_func(
+	)
+    RETURNS bigint
+    LANGUAGE 'plpgsql'
+    COST 100
+    VOLATILE PARALLEL UNSAFE
+AS $BODY$
+DECLARE 
+	not_found BOOLEAN := true;
+	llave_ BIGINT := 0;
+	no_tiene_12 BOOLEAN := true;
+   
+BEGIN
+	
+	WHILE no_tiene_12 LOOP
+				
+		llave_ = CAST(random()*1000000000000 AS BIGINT);
+				
+		IF LENGTH(CAST(llave_ AS VARCHAR)) = 12 THEN
+			no_tiene_12 = false;
+				
+		END IF;
+	END LOOP;
+	
+	WHILE not_found LOOP	
+		
+		IF (EXISTS (SELECT llave FROM public."Llave" WHERE llave = llave_)) THEN
+		
+			RAISE NOTICE 'llave %, ya existe', llave_;
+
+		ELSE
+	  		INSERT INTO public."Llave"(llave)
+				VALUES (llave_);	
+			
+			not_found = false;
+			
+		END IF;
+	END LOOP;
+	
+	RETURN llave_;
+END;
+$BODY$;
+
+ALTER FUNCTION public.crear_llave_func()
+    OWNER TO dwadmin;
+
+
+-- Trigger Functions y triggers
+
