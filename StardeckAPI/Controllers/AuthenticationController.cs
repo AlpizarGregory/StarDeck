@@ -9,14 +9,12 @@ namespace Controllers;
 [Route("[controller]")]
 public class AuthenticationController : ControllerBase
 {
-
     private readonly ILogger<AuthenticationController> _logger;
-
     private readonly IConfiguration _configuration;
 
     private readonly PostgresDBContext _db;
 
-    public AuthenticationController(ILogger<AuthenticationController> logger, IConfiguration configuration, PostgresDBContext db)
+    public AuthenticationController(ILogger<AuthenticationController> logger,IConfiguration configuration, PostgresDBContext db)
     {
         _logger = logger;
         _configuration = configuration;
@@ -125,7 +123,7 @@ public class AuthenticationController : ControllerBase
                 await _db.SaveChangesAsync();
                 return Ok(player);
             }
-
+            return BadRequest("Player already exists");
         }
         return Conflict();
     }

@@ -26,16 +26,55 @@ public class CardController : ControllerBase
     {
         if (_db.Cards != null)
         {
-            Card? cardFound = await _db.Cards.FindAsync(card.Key);
+            Card? cardFound = await _db.Cards.FindAsync(card.Name);
             if (cardFound == null)
             {
                 _db.Cards.Add(card);
                 await _db.SaveChangesAsync();
                 return Ok(card);
             }
+            return BadRequest("Card already exists");
         }
-
         return Conflict();
-
     }
+
+    [HttpGet]
+    [Route("getAll")]
+    public IActionResult getAllCards()
+    {
+        if (_db.Cards != null)
+        {
+            List<Card> cards = _db.Cards.ToList<Card>();
+            return Ok(cards);
+        }
+        return Conflict();
+    }
+
+    [HttpGet]
+    [Route("get/byName/{name}")]
+    public IActionResult getCardByName(string name)
+    {
+        if (_db.Cards != null)
+        {
+            Card? cardFound =  _db.Cards.Where(card => card.Name == name).FirstOrDefault<Card>();
+            if (cardFound == null) return NotFound();
+            return Ok(cardFound);
+        }
+        return Conflict();
+    }
+
+    [HttpGet]
+    [Route("get/byId/{id}")]
+    public IActionResult getCardById(string id)
+    {
+        if (_db.Cards != null)
+        {
+            Card? cardFound =  _db.Cards.Find(id);
+            if (cardFound == null) return NotFound();
+            return Ok(cardFound);
+        }
+        return Conflict();
+    }
+
+    
 }
