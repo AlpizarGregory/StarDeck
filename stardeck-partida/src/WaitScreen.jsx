@@ -1,7 +1,7 @@
 import { useContext, useState } from "react";
 import DeckCard from "./components/DeckCard";
 import { waitScreenContext } from "./context/WaitScreenContext";
-import second from 'react-countdown'
+import WaitCountdown from "./components/WaitCountdown";
 
 function WaitScreen() {
   const { deckCards } = useContext(waitScreenContext);
@@ -45,7 +45,7 @@ function WaitScreen() {
           >
             <p className="text-2xl pt-20">Tiempo restante</p>
             <p className="p-8" style={{ fontSize: "100px" }}>
-              20 s
+              <WaitCountdown />
             </p>
             <img
               className="animate-rocket-spin"
@@ -53,7 +53,7 @@ function WaitScreen() {
             />
           </div>
         </div>
-        <div className="bg-teal-950 p-8 pt-3 m-2 rounded-2xl text-center place-self-center font-mono text-red-300">
+        <div className="bg-teal-950 p-8 pt-3 m-2 rounded-2xl text-center place-self-center font-mono text-red-300 bg-opacity-80">
           <p className="pb-2 text-3xl">Deck seleccionado</p>
           <p className="pb-5 text-xl">{"<nombre del deck>"}</p>
 
