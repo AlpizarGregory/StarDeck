@@ -3,7 +3,7 @@ export default {
   content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
   theme: {
     extend: {
-      animation: { "rocket-spin": "spin 20 linear infinite" },
+      animation: { rocket: "spin 5s linear infinite" },
     },
   },
   plugins: [],
