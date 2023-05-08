@@ -1,6 +1,6 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
-import WaitScreen from "./components/WaitScreen.jsx";
+import WaitScreen from "./components/WaitScreen";
 import "../index.css";
 import { WaitScreenContextProvider } from "./context/WaitScreenContext.jsx";
 

@@ -1,7 +1,13 @@
 import React from "react";
+import "../index.css";
 import ReactDOM from "react-dom/client";
+import MatchScreen from "./components/MatchScreen";
+import { MatchContextProvider } from "./context/MatchContext";
+
 ReactDOM.createRoot(document.getElementById("wait-root")).render(
   <React.StrictMode>
-    <p>Partida</p>
+    <MatchContextProvider>
+      <MatchScreen />
+    </MatchContextProvider>
   </React.StrictMode>
 );

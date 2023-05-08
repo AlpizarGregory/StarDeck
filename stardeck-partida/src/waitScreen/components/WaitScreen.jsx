@@ -31,12 +31,12 @@ function WaitScreen() {
           <p
             className="text-center p-6 bg-teal-900 text-xl font-mono text-yellow-50 bg-opacity-50 fixed rounded-xl"
             style={{
-              width: "240px",
+              width: "260px",
               marginLeft: "51px",
               marginTop: "370px",
             }}
           >
-            Para ganar, deberá completar el objetivo del juego: Conquitar al
+            Para ganar deberá completar el objetivo del juego: Conquitar al
             menos 2 de los 3 planetas utilizando sus cartas en ellos. Planee
             bien las estrategia ¡y no se quede sin energía!
           </p>
