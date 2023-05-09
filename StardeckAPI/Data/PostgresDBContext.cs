@@ -13,6 +13,7 @@ namespace Data
         public DbSet<Deck>? Decks { get; set; }
         public DbSet<CardDeck>? CardDecks { get; set; }
         public DbSet<Match>? Matches { get; set; }
+        public DbSet<CardPlayer>? CardPlayers { get; set; }
         public PostgresDBContext(DbContextOptions<PostgresDBContext> options) : base(options)
         {
         }

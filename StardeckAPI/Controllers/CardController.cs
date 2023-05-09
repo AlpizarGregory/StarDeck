@@ -180,4 +180,79 @@ public class CardController : ControllerBase
         }
         return new List<Card>();
     }
+
+    /// <summary>
+    /// GET todas las cartas de un tipo
+    /// </summary>
+    /// <param name="type"></param>
+    /// <returns></returns>
+    [HttpGet]
+    [Route("getCards/byType/{type}")]
+    public IActionResult getCardsByType(string type)
+    {
+        if (_db.Cards != null)
+        {
+            List<Card> cards = _db.Cards.Where(card => card.Type == type).ToList<Card>();
+            if (!cards.Any()) return NotFound(); //Si la lista está vacía, retorna NotFound
+            randomizeCards(cards);
+            return Ok(cards);
+        }
+        return Conflict();
+    }
+
+    /// <summary>
+    /// GET todas las cartas de un jugador
+    /// </summary>
+    /// <param name="player"></param>
+    /// <returns></returns>
+    [HttpGet]
+    [Route("getCards/byPlayer/{player}")]
+    public IActionResult getCardsByPlayer(string player)
+    {
+        if (_db.CardPlayers != null && _db.Cards != null) //Si la lista de cartas y la lista de cartas de jugadores no son nulas
+        {
+            List<Card> cards = cardsOfPlayer(player); //Obtiene las cartas del jugador
+            if (!cards.Any()) return NotFound(); //Si la lista está vacía, retorna NotFound
+            return Ok(cards); //Retorna la lista de cartas
+        }
+        return Conflict(); //retorna Conflict
+    }
+
+    /// <summary>
+    ///Retorna una lista de cartas que pertenecen a un jugador
+    /// </summary>
+    /// <param name="player"></param>
+    /// <returns></returns>
+    private List<Card> cardsOfPlayer(string player)
+    {
+        if (_db.CardPlayers != null && _db.Cards != null) //Si la lista de cartas y la lista de cartas de jugadores no son nulas
+        {
+            List<Card> cards = new List<Card>();
+            //Obtiene las cartas del jugador
+            var cardPlayers = _db.CardPlayers.Where(cp => cp.Player == player);
+            cards = _db.Cards.Where(c => cardPlayers.Any(cp => cp.Card == c.Key)).ToList<Card>();
+            return cards; //Retorna la lista de cartas
+        }
+        return new List<Card>(); //Si la lista de cartas o la lista de cartas de jugadores es nula, retorna una lista vacía
+    }
+
+    /// <summary>
+    /// POST de una carta al inventario de un jugador
+    /// </summary>
+    /// <param name="cardPlayer"></param>
+    /// <returns></returns>
+    [HttpPost]
+    [Route("postCard/toPlayer")]
+    public IActionResult postCardToPlayer(CardPlayer cardPlayer)
+    {
+        if (_db.CardPlayers != null && _db.Cards != null)
+        {
+            Card? cardFound = _db.Cards.Find(cardPlayer.Card);
+            if (cardFound == null) return NotFound();
+            _db.CardPlayers.Add(cardPlayer);
+            _db.SaveChanges();
+            return Ok();
+        }
+        return Conflict();
+    }
 }

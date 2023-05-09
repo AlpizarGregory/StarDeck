@@ -46,7 +46,7 @@ public class AuthenticationController : ControllerBase
         {
             Administrator? adminFound = _db.Administrators.Find(admin.Username);
             if (adminFound == null) return NotFound();
-            if (checkIncomingAndStoredPasswords(admin.Password, adminFound.Password)) return Ok(adminFound);
+            if (adminFound.Password == admin.Password) return Ok(adminFound);
         }
 
         return BadRequest("Invalid credentials");
