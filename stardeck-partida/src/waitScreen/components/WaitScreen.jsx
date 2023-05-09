@@ -4,7 +4,7 @@ import { waitScreenContext } from "../context/WaitScreenContext";
 import WaitCountdown from "./WaitCountdown";
 
 function WaitScreen() {
-  const { deckCards } = useContext(waitScreenContext);
+  const { deckCards, setPlayer, player } = useContext(waitScreenContext);
 
   const myStyle = {
     backgroundImage:
@@ -25,8 +25,8 @@ function WaitScreen() {
               width: "300px",
             }}
           >
-            <p className="text-2xl pt-2">{"<nombre del usuario>"}</p>
-            <p className="text-xl my-1">{"<rango>"}</p>
+            <p className="text-2xl pt-2">{"Usuario: " + player.username}</p>
+            <p className="text-xl my-1">{"Rango: " + player.range}</p>
             <p className="text-lg py-4">
               Será emparejado con jugadores hasta 100 más o menos rango
             </p>
