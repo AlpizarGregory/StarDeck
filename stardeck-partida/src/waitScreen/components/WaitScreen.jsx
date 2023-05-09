@@ -5,6 +5,7 @@ import WaitCountdown from "./WaitCountdown";
 
 function WaitScreen() {
   const { deckCards } = useContext(waitScreenContext);
+
   const myStyle = {
     backgroundImage:
       "url('https://media.discordapp.net/attachments/1078073528764604606/1104840043853516880/dalle-image465_1.png?width=880&height=666')",
@@ -16,11 +17,14 @@ function WaitScreen() {
     <main className="w-screen" style={myStyle}>
       <div className="grid grid-cols-3">
         <div>
-          <div className="p-5 text-orange-200 text-center bg-teal-950 bg-opacity-50 rounded-xl fixed" style={{
-            marginTop: "20px",
-            marginLeft: "20px",
-            width: "300px",
-          }}>
+          <div
+            className="p-5 text-orange-200 text-center bg-teal-950 bg-opacity-50 rounded-xl fixed"
+            style={{
+              marginTop: "20px",
+              marginLeft: "20px",
+              width: "300px",
+            }}
+          >
             <p className="text-2xl pt-2">{"<nombre del usuario>"}</p>
             <p className="text-xl my-1">{"<rango>"}</p>
             <p className="text-lg py-4">
@@ -60,7 +64,7 @@ function WaitScreen() {
             </p>
             <img
               className="animate-rocket fixed"
-              src="https://media.discordapp.net/attachments/1104880725771157526/1104993585507618847/rocket.png?width=666&height=666"
+              src="https://media.discordapp.net/attachments/1104880725771157526/1105379232143642644/rocket-min.png?width=666&height=666"
               style={{
                 height: "775px",
                 width: "775px",

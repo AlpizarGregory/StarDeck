@@ -4,7 +4,7 @@ import ReactDOM from "react-dom/client";
 import MatchScreen from "./components/MatchScreen";
 import { MatchContextProvider } from "./context/MatchContext";
 
-ReactDOM.createRoot(document.getElementById("wait-root")).render(
+ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
     <MatchContextProvider>
       <MatchScreen />
