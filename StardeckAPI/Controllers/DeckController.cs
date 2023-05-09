@@ -7,12 +7,21 @@ namespace Controllers;
 [ApiController]
 [Route("[controller]")]
 
+/// <summary>
+/// Controlador de las barajas
+/// </summary>
 public class DeckController : ControllerBase
 {
     private readonly ILogger<DeckController> _logger;
     private readonly IConfiguration _configuration;
     private readonly PostgresDBContext _db;
 
+    /// <summary>
+    /// Constructor de la clase DeckController
+    /// </summary>
+    /// <param name="logger"></param>
+    /// <param name="configuration"></param>
+    /// <param name="db"></param>
     public DeckController(ILogger<DeckController> logger, IConfiguration configuration, PostgresDBContext db)
     {
         _logger = logger;
@@ -20,6 +29,11 @@ public class DeckController : ControllerBase
         _db = db;
     }
 
+    /// <summary>
+    /// POST de una baraja
+    /// </summary>
+    /// <param name="deck"></param>
+    /// <returns></returns>
     [HttpPost]
     [Route("create")]
     public async Task<IActionResult> createDeck([FromBody] Deck deck)
@@ -38,6 +52,10 @@ public class DeckController : ControllerBase
         return Conflict();
     }
 
+    /// <summary>
+    /// GET de todas las barajas
+    /// </summary>
+    /// <returns></returns>
     [HttpGet]
     [Route("getAll")]
     public IActionResult getAllDecks()
@@ -50,6 +68,11 @@ public class DeckController : ControllerBase
         return NotFound();
     }
 
+    /// <summary>
+    /// GET de una baraja por nombre
+    /// </summary>
+    /// <param name="name"></param>
+    /// <returns></returns>
     [HttpGet]
     [Route("get/byName/{name}")]
     public IActionResult getDeckByName(string name)
@@ -63,6 +86,11 @@ public class DeckController : ControllerBase
         return NotFound();
     }
 
+    /// <summary>
+    /// GET de las barajas de un jugador
+    /// </summary>
+    /// <param name="player"></param>
+    /// <returns></returns>
     [HttpGet]
     [Route("get/byPlayer/{player}")]
     public IActionResult getDeckByPlayer(string player)
@@ -76,9 +104,13 @@ public class DeckController : ControllerBase
         return NotFound();
     }
 
+    /// <summary>
+    /// POST de una carta a una baraja
+    /// </summary>
+    /// <param name="cardDeck"></param>
+    /// <returns></returns>
     [HttpPost]
     [Route("addCard")]
-
     public async Task<IActionResult> addCardToDeck([FromBody] CardDeck cardDeck)
     {
         if (_db.CardDecks != null)
@@ -95,6 +127,11 @@ public class DeckController : ControllerBase
         return Conflict();
     }
 
+    /// <summary>
+    /// DELETE de una carta de una baraja
+    /// </summary>
+    /// <param name="cardDeck"></param>
+    /// <returns></returns>
     [HttpDelete]
     [Route("removeCard/")]
     public async Task<IActionResult> removeCardFromDeck([FromBody] CardDeck cardDeck)
@@ -111,61 +148,6 @@ public class DeckController : ControllerBase
             return BadRequest("Card does not exist in deck");
         }
         return Conflict();
-    }
-
-    [HttpGet]
-    [Route("getCards/byDeck/{deck}")]
-    public IActionResult getCardsByDeck(string deck)
-    {
-        if (_db.CardDecks != null && _db.Cards != null)
-        {
-            List<Card> cards = cardsInDeck(deck);
-            if (!cards.Any()) return NotFound(); //Si la lista está vacía, retorna NotFound
-            return Ok(cards);
-        }
-        return Conflict();
-    }
-
-    [HttpGet]
-    [Route("getCards/byDeck/{deck}/random")]
-    public IActionResult getCardsByDeckRandom(string deck)
-    {
-        if (_db.CardDecks != null && _db.Cards != null)
-        {
-            List<Card> cards = cardsInDeck(deck);
-            if (!cards.Any()) return NotFound(); //Si la lista está vacía, retorna NotFound
-            randomizeCards(cards);
-            return Ok(cards);
-        }
-        return Conflict();
-    }
-
-    private void randomizeCards(List<Card> cardDecks)
-    {
-        Random random = new Random();
-        for (int i = 0; i < cardDecks.Count; i++)
-        {
-            int randomIndex = random.Next(cardDecks.Count);
-            Card temp = cardDecks[i];
-            cardDecks[i] = cardDecks[randomIndex];
-            cardDecks[randomIndex] = temp;
-        }
-    }
-
-    private List<Card> cardsInDeck(string deck)
-    {
-        if (_db.CardDecks != null && _db.Cards != null)
-        {
-            List<CardDeck> cardDecks = _db.CardDecks.Where(cardDeck => cardDeck.Deck == deck).ToList<CardDeck>();
-            List<Card> cards = new List<Card>();
-            foreach (CardDeck cardDeck in cardDecks)
-            {
-                Card? cardFound = _db.Cards.Where(card => card.Key == cardDeck.Card).FirstOrDefault<Card>();
-                if (cardFound != null) cards.Add(cardFound);
-            }
-            return cards;
-        }
-        return new List<Card>();
     }
 
 }

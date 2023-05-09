@@ -7,13 +7,25 @@ namespace Controllers;
 
 [ApiController]
 [Route("[controller]")]
+
+/// <summary>
+/// Controlador de autenticación
+/// </summary>
 public class AuthenticationController : ControllerBase
 {
+    /// <summary>
+    /// 
+    /// </summary>
     private readonly ILogger<AuthenticationController> _logger;
     private readonly IConfiguration _configuration;
-
     private readonly PostgresDBContext _db;
 
+    /// <summary>
+    /// Constructor de la clase AuthenticationController
+    /// </summary>
+    /// <param name="logger"></param>
+    /// <param name="configuration"></param>
+    /// <param name="db"></param>
     public AuthenticationController(ILogger<AuthenticationController> logger,IConfiguration configuration, PostgresDBContext db)
     {
         _logger = logger;
@@ -21,6 +33,11 @@ public class AuthenticationController : ControllerBase
         _db = db;
     }
 
+    /// <summary>
+    /// Login de un administrador
+    /// </summary>
+    /// <param name="admin"></param>
+    /// <returns></returns>
     [HttpPost]
     [Route("login/administrator")]
     public IActionResult loginAdministrator([FromBody] Administrator admin)
@@ -35,7 +52,11 @@ public class AuthenticationController : ControllerBase
         return BadRequest("Invalid credentials");
     }
 
-    
+    /// <summary>
+    /// Login de un jugador
+    /// </summary>
+    /// <param name="player"></param>
+    /// <returns></returns>
     [HttpPost]
     [Route("login/player")]
     public IActionResult loginPlayer([FromBody] PlayerLogin player)
@@ -63,6 +84,10 @@ public class AuthenticationController : ControllerBase
 
     }
 
+    /// <summary>
+    /// Desbloquea al usuario si han pasado 15 segundos desde que fue bloqueado
+    /// </summary>
+    /// <param name="playerFound"></param>
     private void unblockUserAfterDelay(Player playerFound)
     {
         // If the user is not blocked, do nothing
@@ -77,6 +102,11 @@ public class AuthenticationController : ControllerBase
 
     }
 
+    /// <summary>
+    /// Retorna el tiempo que ha pasado desde que el usuario fue bloqueado
+    /// </summary>
+    /// <param name="playerFound"></param>
+    /// <returns></returns>
     private TimeSpan getTimeSinceUserWasBlocked(Player playerFound)
     {
         DateTime currentTime = DateTime.Now;
@@ -85,6 +115,10 @@ public class AuthenticationController : ControllerBase
 
     }
 
+    /// <summary>
+    /// Añade un intento fallido al usuario y lo bloquea si llega a 3
+    /// </summary>
+    /// <param name="playerFound"></param>
     private void addAttemptsAndBlockUserIfNecessary(Player playerFound)
     {
         playerFound.FailedAttempts++;
@@ -92,6 +126,10 @@ public class AuthenticationController : ControllerBase
         if (playerFound.FailedAttempts >= 3) blockUser(playerFound);
     }
 
+    /// <summary>
+    /// Bloquea al usuario
+    /// </summary>
+    /// <param name="playerFound"></param>
     private void blockUser(Player playerFound)
     {
         playerFound.Status = "inactivo";
@@ -101,6 +139,10 @@ public class AuthenticationController : ControllerBase
 
     }
 
+    /// <summary>
+    /// Desbloquea al usuario
+    /// </summary>
+    /// <param name="playerFound"></param>
     private void unblockUser(Player playerFound)
     {
         playerFound.Status = "activo, sin partida";
@@ -110,6 +152,11 @@ public class AuthenticationController : ControllerBase
 
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="player"></param>
+    /// <returns></returns>
     [HttpPost]
     [Route("register/player")]
     public async Task<IActionResult> registerPlayer([FromBody] Player player)
@@ -128,6 +175,12 @@ public class AuthenticationController : ControllerBase
         return Conflict();
     }
 
+    /// <summary>
+    /// Compara la contraseña que viene en el body con la contraseña encriptada que está almacenada en la base de datos
+    /// </summary>
+    /// <param name="incommingPassword"></param>
+    /// <param name="storedHash"></param>
+    /// <returns></returns>
     bool checkIncomingAndStoredPasswords(string incommingPassword, string storedHash)
     {
         return Encription.encriptPassword(incommingPassword) == storedHash;
