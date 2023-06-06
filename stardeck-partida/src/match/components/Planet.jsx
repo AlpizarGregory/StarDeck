@@ -1,6 +1,6 @@
 import React from "react";
 
-function Planet({ image, hide, mt, ml }) {
+function Planet({ image, id, mt, ml }) {
   return (
     <img
       className="fixed"

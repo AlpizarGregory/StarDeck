@@ -34,6 +34,7 @@ function MatchScreen() {
           zIndex: 0,
         }}
       />
+
       <div
         className="bg-cyan-950 mt-10 ml-2 rounded-xl bg-opacity-60 backdrop-blur-sm text-center font-mono text-teal-300 p-3 fixed"
         style={{
@@ -45,6 +46,7 @@ function MatchScreen() {
         <h1 className="text-lg">{"Rango: " + player.range}</h1>
         <h1 className="text-lg">{"Monedas: " + player.coins}</h1>
       </div>
+
       <div
         className="bg-gray-400 bg-opacity-40 rounded-3xl ml-2 backdrop-blur-sm p-4 font-mono fixed"
         style={{
@@ -67,6 +69,7 @@ function MatchScreen() {
           <MatchCountdown />
         </div>
       </div>
+
       <div
         className="bg-cyan-950 mt-10 rounded-xl bg-opacity-60 backdrop-blur-sm text-center font-mono text-violet-400 p-3 fixed"
         style={{
@@ -78,6 +81,7 @@ function MatchScreen() {
         <h1 className="text-xl mt-6">{"Oponente: " + oponent.username}</h1>
         <h1 className="text-lg">{"Rango: " + oponent.range}</h1>
       </div>
+
       <div>
         {planets.map((planet, i) => (
           <div
@@ -107,7 +111,12 @@ function MatchScreen() {
             >
               {planet.type}
             </h1>
-            <Planet key={"planet-" + i} image={planet.image_pl} mt={20} ml={45} />
+            <Planet
+              key={"planet-" + i}
+              image={planet.image_pl}
+              mt={20}
+              ml={45}
+            />
             <h1 className="mt-48 text-xl pt-10">Estado de captura</h1>
             <div
               className="bg-sky-950 w-60 h-8 rounded-md"
@@ -126,6 +135,7 @@ function MatchScreen() {
           </div>
         ))}
       </div>
+
       <div
         className="fixed bg-slate-800 bg-opacity-70 rounded-lg border-4 border-slate-900 backdrop-blur-sm text-center py-3 px-12 "
         style={{
