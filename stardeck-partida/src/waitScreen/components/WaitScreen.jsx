@@ -17,6 +17,8 @@ function WaitScreen() {
     <main className="w-screen" style={myStyle}>
       <div className="grid grid-cols-3">
         <div>
+          {/*
+          Este código fue omitido debido a los resultados de las pruebas de usabilidad.
           <div
             className="p-5 text-orange-200 text-center bg-teal-950 bg-opacity-50 rounded-xl fixed"
             style={{
@@ -30,20 +32,31 @@ function WaitScreen() {
             <p className="text-lg py-4">
               Será emparejado con jugadores hasta 100 más o menos rango
             </p>
-          </div>
+          </div>*/}
 
           <p
-            className="text-center p-6 bg-teal-900 text-xl font-mono text-yellow-50 bg-opacity-50 fixed rounded-xl"
+            className="text-center p-6 ml-32 bg-teal-900 text-2xl font-mono text-yellow-100 bg-opacity-50 fixed rounded-xl"
             style={{
-              width: "260px",
-              marginLeft: "51px",
-              marginTop: "370px",
+              width: "400px",
+              //marginLeft: "51px",
+              marginTop: "70px",
             }}
           >
-            Para ganar deberá completar el objetivo del juego: Conquitar al
-            menos 2 de los 3 planetas utilizando sus cartas en ellos. Planee
-            bien las estrategia ¡y no se quede sin energía!
+            <div className="text-3xl text-amber-500">Objetivo del juego:</div>
+
+            <br />
+            <br />
+
+            <div className="px-7 pb-5">
+              Para ganar deberá completar el objetivo del juego: Conquitar al
+              menos 2 de los 3 planetas utilizando sus cartas en ellos. Planee
+              bien las estrategia ¡y no se quede sin energía!
+            </div>
+
           </p>
+          <h1 className="font-mono fixed text-4xl px-7 text-orange-900" style={{
+            marginTop: "860px",
+          }}>Star Deck</h1>
         </div>
 
         <div className="text-center font-mono">
@@ -58,8 +71,8 @@ function WaitScreen() {
               height: "400px",
             }}
           >
-            <p className="text-2xl pt-20">Tiempo restante</p>
-            <p className="p-8" style={{ fontSize: "100px" }}>
+            <p className="text-3xl pt-24 text-amber-100">Tiempo restante</p>
+            <p className="pt-8 text-amber-100" style={{ fontSize: "100px" }}>
               <WaitCountdown />
             </p>
             <img
@@ -75,7 +88,7 @@ function WaitScreen() {
           </div>
         </div>
         <div
-          className="bg-teal-950 p-8 pt-3 rounded-2xl text-center place-self-center font-mono text-red-300 bg-opacity-80 fixed"
+          className="bg-teal-950 p-8 pt-3 rounded-2xl text-center place-self-center font-mono text-amber-500 bg-opacity-80 fixed"
           style={{
             marginLeft: "1000px",
             marginTop: "150px",
@@ -83,7 +96,7 @@ function WaitScreen() {
           }}
         >
           <p className="pb-2 text-3xl">Deck seleccionado</p>
-          <p className="pb-5 text-xl">{"<nombre del deck>"}</p>
+          <p className="pb-5 text-xl">{"Deck de prueba"}</p>
 
           <div className="columns-2">
             {deckCards.map((deckCard, i) => (

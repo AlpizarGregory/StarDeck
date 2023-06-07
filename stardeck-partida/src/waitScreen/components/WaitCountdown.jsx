@@ -6,8 +6,8 @@ function WaitCountdown() {
 
     return (
       <>
-        <span className="text-2xl text-red-700">Saliendo...</span>
-        <meta http-equiv="Refresh" content="0; url='../'" />
+        <span className="text-5xl text-red-500">Saliendo</span>
+        {/*<meta http-equiv="Refresh" content="0; url='../'" />*/}
       </>
     );
   };
